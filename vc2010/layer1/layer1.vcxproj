@@ -36,6 +36,7 @@
     <ClInclude Include="..\..\src\loaders\gif_decoder.h" />
     <ClInclude Include="..\..\src\loaders\jpeg_decoder.h" />
     <ClInclude Include="..\..\src\loaders\tga_decoder.h" />
+    <ClInclude Include="..\..\src\lsystem\dirent.h" />
     <ClInclude Include="..\..\src\lsystem\lsystem.h" />
     <ClInclude Include="..\..\src\math\aabb.h" />
     <ClInclude Include="..\..\src\math\bvec4.h" />

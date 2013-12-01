@@ -1,0 +1,6 @@
+Lsystem
+Name: Fifth
+Iterations: 7
+Angle: 25.7
+Axiom: X
+Rules: X=F[+X][-X]FX, F=FF

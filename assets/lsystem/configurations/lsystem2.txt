@@ -1,0 +1,6 @@
+Lsystem
+Name: Second
+Iterations: 5
+Angle: 20
+Axiom: F
+Rules: F=F[+F]F[-F][F]
