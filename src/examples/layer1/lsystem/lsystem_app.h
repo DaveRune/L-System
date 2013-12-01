@@ -47,10 +47,13 @@ namespace octet {
 			pd->Iterate(axiom, 5);
 
 
+			int index = 0;
+			float angle = 25.7f;
       modelToWorld.loadIdentity();
       cameraToWorld.loadIdentity();
       cameraToWorld.translate(0, 120, 180);
-
+			pd->Process(axiom, index, modelToWorld, cameraToWorld, color_shader_, angle);
+			pd->ProcessTree();
     }
 
 		void Controls() {
@@ -98,8 +101,8 @@ namespace octet {
 
       // allow Z buffer depth testing (closer objects are always drawn in front of far ones)
       glEnable(GL_DEPTH_TEST);
-			int index = 0;
-			pd->Process(axiom, index, modelToWorld, cameraToWorld, color_shader_, 25.7f);
+			
+			pd->RenderOne(cameraToWorld, color_shader_);
     }
   };
 }
