@@ -23,15 +23,23 @@ namespace octet {
     mat4t modelToWorld;              // this matrix converts from model space to world space
     mat4t cameraToWorld;             // this matrix converts from camera space to world space
     color_shader color_shader_; // this builds a shader to use with textures
-		LSYS_production_rules *pd;
+		
 		LSYS_File_Finder *ff;
-		string axiom;
+		LSYS_File_Reader *fr;
+		LSYS_production_rules *pd;
+
+		int LSystemQuantity;
+
+
+		//string axiom;
 
   public:
 
     // this is called when we construct the class
-    lsystem_app(int argc, char **argv) : app(argc, argv) {
-    }
+    lsystem_app(int argc, char **argv):
+		app(argc, argv),
+		LSystemQuantity(0)
+		{}
 
     // this is called once OpenGL is initialized
     void app_init() {
@@ -40,23 +48,28 @@ namespace octet {
       color_shader_.init();
 
 			// Create lsystems class and iterate
-			ff = new LSYS_File_Finder();
+			fr = new LSYS_File_Reader();
+			ff = new LSYS_File_Finder(*fr);
 			ff->LS_LocateLsystemFiles();
-			pd = new LSYS_production_rules();
-			axiom = "F";
-			pd->Iterate(axiom, 5);
 
+			pd = new LSYS_production_rules();
+			pd->AssignLSystem(&fr->LSystems[0]);
+			pd->Iterate();
+
+			LSystemQuantity = fr->LSystems.size();
 
 			int index = 0;
-			float angle = 25.7f;
       modelToWorld.loadIdentity();
+			float treeHeight = 0, treeWidth = 0;
+			pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[0].angle);
+			pd->ProcessTree(treeHeight, treeWidth);
+			treeHeight *= 0.5f;  treeWidth *= 0.5f;
       cameraToWorld.loadIdentity();
-      cameraToWorld.translate(0, 120, 180);
-			pd->Process(axiom, index, modelToWorld, cameraToWorld, color_shader_, angle);
-			pd->ProcessTree();
+      cameraToWorld.translate(treeWidth, treeHeight, treeHeight*1.2f);
     }
 
 		void Controls() {
+			static bool keyPressed = false;
 #pragma region Camera Movement
 			if(is_key_down('W')) {
 				cameraToWorld.translate(0, +10, 0);
@@ -76,17 +89,182 @@ namespace octet {
 			if(is_key_down('E')) {
 				cameraToWorld.translate(0, 0, +10);
 			}
-			if(is_key_down('R')) {
-				cameraToWorld.loadIdentity();
-				cameraToWorld.translate(0, 120, 180);
+			//if(is_key_down('R')) {
+			//	cameraToWorld.loadIdentity();
+			//	cameraToWorld.translate(0, 120, 180);
+			//}
+			if(is_key_down(key_space)) {
+				system("cls");
+				fr->DisplayFileResults();
+				pd->DisplayLSystemDraw();
 			}
 #pragma endregion
 
 #pragma region L-System Loading
+			int index = 0;
 			if(is_key_down('1')) {
-				printf("One");
+				if(0 >= LSystemQuantity) return;
+				if(!keyPressed)
+				{
+					pd->AssignLSystem(&fr->LSystems[0]);
+					pd->Iterate();
+					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[0].angle);
+					float treeHeight = 0, treeWidth = 0;
+					pd->ProcessTree(treeHeight, treeWidth);
+					treeHeight *= 0.5f;  treeWidth *= 0.5f;
+					cameraToWorld.loadIdentity();
+					cameraToWorld.translate(0, treeHeight, treeHeight*1.2f);
+					keyPressed = true;
+				}
 			}
+			else if(is_key_down('2')) {
+				if(1 >= LSystemQuantity) return;
+				if(!keyPressed)
+				{
+					pd->AssignLSystem(&fr->LSystems[1]);
+					pd->Iterate();
+					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[1].angle);
+					float treeHeight = 0, treeWidth = 0;
+					pd->ProcessTree(treeHeight, treeWidth);
+					treeHeight *= 0.5f;  treeWidth *= 0.5f;
+					cameraToWorld.loadIdentity();
+					cameraToWorld.translate(0, treeHeight, treeHeight*1.2f);
+					keyPressed = true;
+				}
+			}
+			else if(is_key_down('3')) {
+				if(2 >= LSystemQuantity) return;
+				if(!keyPressed)
+				{
+					pd->AssignLSystem(&fr->LSystems[2]);
+					pd->Iterate();
+					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[2].angle);
+					float treeHeight = 0, treeWidth = 0;
+					pd->ProcessTree(treeHeight, treeWidth);
+					treeHeight *= 0.5f;  treeWidth *= 0.5f;
+					cameraToWorld.loadIdentity();
+					cameraToWorld.translate(0, treeHeight, treeHeight*1.2f);
+					keyPressed = true;
+				}
+			}
+			else if(is_key_down('4')) {
+				if(3 >= LSystemQuantity) return;
+				if(!keyPressed)
+				{
+					pd->AssignLSystem(&fr->LSystems[3]);
+					pd->Iterate();
+					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[3].angle);
+					float treeHeight = 0, treeWidth = 0;
+					pd->ProcessTree(treeHeight, treeWidth);
+					treeHeight *= 0.5f;  treeWidth *= 0.5f;
+					cameraToWorld.loadIdentity();
+					cameraToWorld.translate(0, treeHeight, treeHeight*1.2f);
+					keyPressed = true;
+				}
+			}
+			else if(is_key_down('5')) {
+				if(4 >= LSystemQuantity) return;
+				if(!keyPressed)
+				{
+					pd->AssignLSystem(&fr->LSystems[4]);
+					pd->Iterate();
+					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[4].angle);
+					float treeHeight = 0, treeWidth = 0;
+					pd->ProcessTree(treeHeight, treeWidth);
+					treeHeight *= 0.5f;  treeWidth *= 0.5f;
+					cameraToWorld.loadIdentity();
+					cameraToWorld.translate(0, treeHeight, treeHeight*1.2f);
+					keyPressed = true;
+				}
+			}
+			else if(is_key_down('6')) {
+				if(5 >= LSystemQuantity) return;
+				if(!keyPressed)
+				{
+					pd->AssignLSystem(&fr->LSystems[5]);
+					pd->Iterate();
+					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[5].angle);
+					float treeHeight = 0, treeWidth = 0;
+					pd->ProcessTree(treeHeight, treeWidth);
+					treeHeight *= 0.5f;  treeWidth *= 0.5f;
+					cameraToWorld.loadIdentity();
+					cameraToWorld.translate(0, treeHeight, treeHeight*1.2f);
+					keyPressed = true;
+				}
+			}
+			else if(is_key_down('7')) {
+				if(6 >= LSystemQuantity) return;
+				if(!keyPressed)
+				{
+					pd->AssignLSystem(&fr->LSystems[6]);
+					pd->Iterate();
+					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[6].angle);
+					float treeHeight = 0, treeWidth = 0;
+					pd->ProcessTree(treeHeight, treeWidth);
+					treeHeight *= 0.5f;  treeWidth *= 0.5f;
+					cameraToWorld.loadIdentity();
+					cameraToWorld.translate(0, treeHeight, treeHeight*1.2f);
+					keyPressed = true;
+				}
+			}
+			else if(is_key_down('8')) {
+				if(7 >= LSystemQuantity) return;
+				if(!keyPressed)
+				{
+					pd->AssignLSystem(&fr->LSystems[7]);
+					pd->Iterate();
+					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[7].angle);
+					float treeHeight = 0, treeWidth = 0;
+					pd->ProcessTree(treeHeight, treeWidth);
+					treeHeight *= 0.5f;  treeWidth *= 0.5f;
+					cameraToWorld.loadIdentity();
+					cameraToWorld.translate(0, treeHeight, treeHeight*1.2f);
+					keyPressed = true;
+				}
+			}
+			else if(is_key_down('9')) {
+				if(8 >= LSystemQuantity) return;
+				if(!keyPressed)
+				{
+					pd->AssignLSystem(&fr->LSystems[8]);
+					pd->Iterate();
+					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[8].angle);
+					float treeHeight = 0, treeWidth = 0;
+					pd->ProcessTree(treeHeight, treeWidth);
+					treeHeight *= 0.5f;  treeWidth *= 0.5f;
+					cameraToWorld.loadIdentity();
+					cameraToWorld.translate(0, treeHeight, treeHeight*1.2f);
+					keyPressed = true;
+				}
+			}
+			else if(is_key_down(key_up)) {
+				if(!keyPressed) {
+					pd->ReIterate();
+					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_);
+					float treeHeight = 0, treeWidth = 0;
+					pd->ProcessTree(treeHeight, treeWidth);
+					treeHeight *= 0.5f;  treeWidth *= 0.5f;
+					cameraToWorld.loadIdentity();
+					cameraToWorld.translate(0, treeHeight, treeHeight*1.2f);
+					keyPressed = true;
+				}
+			} else if(is_key_down(key_down)) {
+				if(!keyPressed) {
+					pd->DeIterate();
+					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_);
+					float treeHeight = 0, treeWidth = 0;
+					pd->ProcessTree(treeHeight, treeWidth);
+					treeHeight *= 0.5f;  treeWidth *= 0.5f;
+					cameraToWorld.loadIdentity();
+					cameraToWorld.translate(0, treeHeight, treeHeight*1.2f);
+					keyPressed = true;
+				}
+			} else
+				keyPressed = false;
 #pragma endregion
+
+			
+
 		}
 
     // this is called to draw the world

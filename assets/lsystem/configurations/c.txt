@@ -1,0 +1,6 @@
+Lsystem
+Name: Hilbert_Curve
+Iterations: 3
+Angle: 90
+Axiom: A
+Rules: A=-BF+AFA+FB-, B=+AF-BFB-FA+

@@ -3,4 +3,4 @@ Name: Fourth
 Iterations: 7
 Angle: 20
 Axiom: X
-Rules: X=F[+X]F[-X]+X, F=FF
+Rules: F=FF, X=F[+X]F[-X]+X

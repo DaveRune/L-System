@@ -1,0 +1,6 @@
+Lsystem
+Name: Koch_Curve
+Iterations: 5
+Angle: 90
+Axiom: -F
+Rules: F = F+F-F-F+F

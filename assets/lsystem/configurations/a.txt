@@ -1,0 +1,6 @@
+Lsystem
+Name: Terdragon
+Iterations: 8
+Angle: 120
+Axiom: F
+Rules: F=F+F-F

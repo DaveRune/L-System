@@ -1,0 +1,6 @@
+Lsystem
+Name: Basic_Example
+Iterations: 7
+Angle: 45
+Axiom: F
+Rules: F = X[-F]+F , X = XX

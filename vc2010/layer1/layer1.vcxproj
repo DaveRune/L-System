@@ -68,6 +68,12 @@
     <ClInclude Include="..\..\src\shaders\texture_shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\assets\lsystem\configurations\lsystem1.txt" />
+    <None Include="..\..\assets\lsystem\configurations\lsystem2.txt" />
+    <None Include="..\..\assets\lsystem\configurations\lsystem3.txt" />
+    <None Include="..\..\assets\lsystem\configurations\lsystem4.txt" />
+    <None Include="..\..\assets\lsystem\configurations\lsystem5.txt" />
+    <None Include="..\..\assets\lsystem\configurations\lsystem6.txt" />
     <None Include="..\..\src\resources\mesh_builder.inl" />
     <None Include="..\..\src\resources\resources.inl" />
   </ItemGroup>

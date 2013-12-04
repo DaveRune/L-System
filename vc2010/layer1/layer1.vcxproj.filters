@@ -213,5 +213,23 @@
     <None Include="..\..\src\resources\resources.inl">
       <Filter>octet\resources</Filter>
     </None>
+    <None Include="..\..\assets\lsystem\configurations\lsystem1.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\assets\lsystem\configurations\lsystem2.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\assets\lsystem\configurations\lsystem3.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\assets\lsystem\configurations\lsystem4.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\assets\lsystem\configurations\lsystem5.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\assets\lsystem\configurations\lsystem6.txt">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

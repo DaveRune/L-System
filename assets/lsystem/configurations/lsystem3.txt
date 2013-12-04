@@ -3,4 +3,4 @@ Name: Third
 Iterations: 4
 Angle: 22.5
 Axiom: F
-Rules: F=FF-[-F+F+F]F[+F-F-F]
+Rules: F=FF-[-F+F+F]+[+F-F-F]

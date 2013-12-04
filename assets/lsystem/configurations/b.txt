@@ -1,0 +1,6 @@
+Lsystem
+Name: SpaceFiller
+Iterations: 3
+Angle: 90
+Axiom: F
+Rules: F=F-F+F+F+F-F-F-F+F

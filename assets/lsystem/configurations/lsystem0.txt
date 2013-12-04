@@ -1,0 +1,6 @@
+Lsystem
+Name: Sierpinski_Triangle
+Iterations: 5
+Angle: 120
+Axiom: F-X-X
+Rules: F=F-X+F+X-F, X=XX
