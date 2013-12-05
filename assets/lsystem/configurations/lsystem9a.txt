@@ -1,0 +1,6 @@
+Lsystem
+Name: Koch_Snowflake
+Iterations: 5
+Angle: 60
+Axiom: F++F++F
+Rules: F = F-F++F-F

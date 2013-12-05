@@ -1,6 +1,6 @@
 Lsystem
 Name: Dragon_Curve
-Iterations: 6
+Iterations: 11
 Angle: 90
 Axiom: FH
 Rules: H = H+YF+ , Y = -FH-Y

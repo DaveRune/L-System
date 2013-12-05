@@ -26,10 +26,12 @@ namespace octet {
 		
 		LSYS_File_Finder *ff;
 		LSYS_File_Reader *fr;
-		LSYS_production_rules *pd;
+		LSYS_Production_Rules *pd;
 
 		int LSystemQuantity;
+		int currentDocument;
 
+		string fileDirectory;
 
 		//string axiom;
 
@@ -37,9 +39,14 @@ namespace octet {
 
     // this is called when we construct the class
     lsystem_app(int argc, char **argv):
+
 		app(argc, argv),
-		LSystemQuantity(0)
-		{}
+		LSystemQuantity(0),
+		currentDocument(0)
+		{
+			for(int i = 0; i < argc; i++) 
+				fileDirectory += argv[i];
+		}
 
     // this is called once OpenGL is initialized
     void app_init() {
@@ -50,9 +57,10 @@ namespace octet {
 			// Create lsystems class and iterate
 			fr = new LSYS_File_Reader();
 			ff = new LSYS_File_Finder(*fr);
+			ff->LS_AssignFileLoc(fileDirectory);
 			ff->LS_LocateLsystemFiles();
 
-			pd = new LSYS_production_rules();
+			pd = new LSYS_Production_Rules();
 			pd->AssignLSystem(&fr->LSystems[0]);
 			pd->Iterate();
 
@@ -109,6 +117,7 @@ namespace octet {
 					pd->AssignLSystem(&fr->LSystems[0]);
 					pd->Iterate();
 					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[0].angle);
+					currentDocument = 0;
 					float treeHeight = 0, treeWidth = 0;
 					pd->ProcessTree(treeHeight, treeWidth);
 					treeHeight *= 0.5f;  treeWidth *= 0.5f;
@@ -124,6 +133,7 @@ namespace octet {
 					pd->AssignLSystem(&fr->LSystems[1]);
 					pd->Iterate();
 					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[1].angle);
+					currentDocument = 1;
 					float treeHeight = 0, treeWidth = 0;
 					pd->ProcessTree(treeHeight, treeWidth);
 					treeHeight *= 0.5f;  treeWidth *= 0.5f;
@@ -139,6 +149,7 @@ namespace octet {
 					pd->AssignLSystem(&fr->LSystems[2]);
 					pd->Iterate();
 					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[2].angle);
+					currentDocument = 2;
 					float treeHeight = 0, treeWidth = 0;
 					pd->ProcessTree(treeHeight, treeWidth);
 					treeHeight *= 0.5f;  treeWidth *= 0.5f;
@@ -154,6 +165,7 @@ namespace octet {
 					pd->AssignLSystem(&fr->LSystems[3]);
 					pd->Iterate();
 					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[3].angle);
+					currentDocument = 3;
 					float treeHeight = 0, treeWidth = 0;
 					pd->ProcessTree(treeHeight, treeWidth);
 					treeHeight *= 0.5f;  treeWidth *= 0.5f;
@@ -169,6 +181,7 @@ namespace octet {
 					pd->AssignLSystem(&fr->LSystems[4]);
 					pd->Iterate();
 					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[4].angle);
+					currentDocument = 4;
 					float treeHeight = 0, treeWidth = 0;
 					pd->ProcessTree(treeHeight, treeWidth);
 					treeHeight *= 0.5f;  treeWidth *= 0.5f;
@@ -184,6 +197,7 @@ namespace octet {
 					pd->AssignLSystem(&fr->LSystems[5]);
 					pd->Iterate();
 					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[5].angle);
+					currentDocument = 5;
 					float treeHeight = 0, treeWidth = 0;
 					pd->ProcessTree(treeHeight, treeWidth);
 					treeHeight *= 0.5f;  treeWidth *= 0.5f;
@@ -199,6 +213,7 @@ namespace octet {
 					pd->AssignLSystem(&fr->LSystems[6]);
 					pd->Iterate();
 					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[6].angle);
+					currentDocument = 6;
 					float treeHeight = 0, treeWidth = 0;
 					pd->ProcessTree(treeHeight, treeWidth);
 					treeHeight *= 0.5f;  treeWidth *= 0.5f;
@@ -214,6 +229,7 @@ namespace octet {
 					pd->AssignLSystem(&fr->LSystems[7]);
 					pd->Iterate();
 					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[7].angle);
+					currentDocument = 7;
 					float treeHeight = 0, treeWidth = 0;
 					pd->ProcessTree(treeHeight, treeWidth);
 					treeHeight *= 0.5f;  treeWidth *= 0.5f;
@@ -229,6 +245,7 @@ namespace octet {
 					pd->AssignLSystem(&fr->LSystems[8]);
 					pd->Iterate();
 					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[8].angle);
+					currentDocument = 8;
 					float treeHeight = 0, treeWidth = 0;
 					pd->ProcessTree(treeHeight, treeWidth);
 					treeHeight *= 0.5f;  treeWidth *= 0.5f;
@@ -259,11 +276,37 @@ namespace octet {
 					cameraToWorld.translate(0, treeHeight, treeHeight*1.2f);
 					keyPressed = true;
 				}
+			} else if(is_key_down(key_left)) {
+				if(!keyPressed) {
+					if(currentDocument-1 < 0) return;
+					else currentDocument--;
+					pd->AssignLSystem(&fr->LSystems[currentDocument]);
+					pd->Iterate();
+					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[currentDocument].angle);
+					float treeHeight = 0, treeWidth = 0;
+					pd->ProcessTree(treeHeight, treeWidth);
+					treeHeight *= 0.5f;  treeWidth *= 0.5f;
+					cameraToWorld.loadIdentity();
+					cameraToWorld.translate(0, treeHeight, treeHeight*1.2f);
+					keyPressed = true;
+				}
+			} else if(is_key_down(key_right)) {
+				if(!keyPressed) {
+					if(currentDocument+1 >= LSystemQuantity) return;
+					else currentDocument++;
+					pd->AssignLSystem(&fr->LSystems[currentDocument]);
+					pd->Iterate();
+					pd->Process(pd->axiom, index, modelToWorld, cameraToWorld, color_shader_, fr->LSystems[currentDocument].angle);
+					float treeHeight = 0, treeWidth = 0;
+					pd->ProcessTree(treeHeight, treeWidth);
+					treeHeight *= 0.5f;  treeWidth *= 0.5f;
+					cameraToWorld.loadIdentity();
+					cameraToWorld.translate(0, treeHeight, treeHeight*1.2f);
+					keyPressed = true;
+				}
 			} else
 				keyPressed = false;
 #pragma endregion
-
-			
 
 		}
 

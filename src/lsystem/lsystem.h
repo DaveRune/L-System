@@ -99,7 +99,13 @@ namespace octet {
 			printf("%d L-System files exist.\n\n", LSystems.size());
 
 			for(int i = 0; i != LSystems.size(); ++i) {
-				printf("L-System  \"%s\"\tassigned to button %d\n", LSystems[i].name, i+1);
+				
+				if(i == 9) printf("\n");
+
+				if(i < 9)
+					printf("L-System  \"%s\"\tassigned to button %d\n", LSystems[i].name, i+1);
+				else
+					printf("To access L-System  \"%s\"\tuse left and right keys.\n", LSystems[i].name, i+1);
 			}
 			printf("\n");
 		}
@@ -108,12 +114,20 @@ namespace octet {
 	class LSYS_File_Finder {
 		private:
 		dynarray<FILE> LSYS_Files;
-		
+		string fileDirectory;
+
 		public:
 		LSYS_File_Reader *fr;
 
 		LSYS_File_Finder(LSYS_File_Reader &_fr){
 			fr = &_fr;
+		}
+
+		void LS_AssignFileLoc (const string &s) {
+			fileDirectory = s;
+			fileDirectory.truncate(fileDirectory.size()-10);
+			fileDirectory += "configurations/";
+			printf("FILE LOCATION = %s\n\n\n\n", fileDirectory);
 		}
 
 		void LS_LocateLsystemFiles () {
@@ -140,10 +154,50 @@ namespace octet {
 				closedir (dir);
 			} else {
 				/* could not open directory */
-				perror ("No Directory Found");
+				printf("No Directory Found - Trying Local Folder\n");
+				LS_LocateLsystemFilesBackup();
 			}
 			fr->DisplayFileResults();
 		}
+
+		void LS_LocateLsystemFilesBackup () {
+			printf("\nSearching for L-System Files in .exe folder ... \n");
+
+			//LSYS_File_Reader *fr = new LSYS_File_Reader();
+			DIR *dir;
+			struct dirent *ent;
+
+			if ((dir = opendir (fileDirectory)) != NULL) {
+				while ((ent = readdir (dir)) != NULL) {
+					FILE *file = NULL;
+					string fileLocation = fileDirectory;
+					fileLocation += ent->d_name;
+					
+					file = fopen(fileLocation, "r");
+					if(file != NULL) {
+						printf("Located File: %s ... ", ent->d_name);
+						
+						if(File_isLsystem(file)) {
+							fr->LS_ReadFile(file);
+						}
+					}
+				}
+				closedir (dir);
+			} else {
+				/* could not open directory */
+				printf("CANT FIND ANY CONFIG FILES\n");
+			}
+			fr->DisplayFileResults();
+		}
+
+		//std::string ExePath() {
+		//	char bufferX[MAX_PATH];
+		//	GetModuleFileName( NULL, bufferX, MAX_PATH );
+		//	std::string::size_type pos = std::string( bufferX ).find_last_of( "\\/" );
+		//	return std::string( bufferX ).substr( 0, pos);
+		//}
+
+
 
 		bool File_isLsystem (FILE *file) {
 			char fileBuffer[512];
@@ -158,12 +212,12 @@ namespace octet {
 					return true;
 				}
 			}
-			printf("DECLINED! - File Not L-System!\n\n");
+			printf("DECLINED! - File Not L-System!\n");
 			return false;
 		}
 	};
 
-	class LSYS_line {
+	class LSYS_Line {
 		
 		mat4t modelToWorld;
 		float vertices[6];
@@ -171,7 +225,7 @@ namespace octet {
 
 	public:
 		
-		LSYS_line(mat4t _modelToWorld,  float length = 1.0f):
+		LSYS_Line(mat4t _modelToWorld,  float length = 1.0f):
 		modelToWorld(_modelToWorld)
 		{
 			vertices[0] = 0.0f; vertices[1] = 0.0f; vertices[2] = 0.0f; 
@@ -207,12 +261,12 @@ namespace octet {
 
 	};
 
-	class LSYS_tree {
+	class LSYS_Tree {
 		mat4t modelToWorld;
 		float *vertices;
 		int numOfLines;
 
-		void ReadLine(int lineIndex, LSYS_line *line)
+		void ReadLine(int lineIndex, LSYS_Line *line)
 		{
 			for(int i = 0; i < 6; i++)
 			{
@@ -236,7 +290,7 @@ namespace octet {
 		float highestY, lowestY;
 		float highestX, lowestX;
 		
-		LSYS_tree(mat4t _modelToWorld):
+		LSYS_Tree(mat4t _modelToWorld):
 		modelToWorld(_modelToWorld),
 		vertices(NULL),
 		numOfLines(0),
@@ -244,7 +298,7 @@ namespace octet {
 		lowestY(999999.0f)
 		{}
 
-		void Init(int _numOfLines, LSYS_line **lines)
+		void Init(int _numOfLines, LSYS_Line **lines)
 		{
 			numOfLines = _numOfLines;
 			vertices = (float*)allocator::realloc(vertices, 0, numOfLines*6*sizeof(float));
@@ -269,10 +323,10 @@ namespace octet {
 
 	};
 
-	class LSYS_production_rules {
+	class LSYS_Production_Rules {
 
-		LSYS_line **lines;
-		LSYS_tree *tree;
+		LSYS_Line **lines;
+		LSYS_Tree *tree;
 		int linesSize;
 		int lineIndex;
 		int currentIteration;
@@ -282,7 +336,7 @@ namespace octet {
 		
 		void ExtendLines()
 		{
-			lines = (LSYS_line**)allocator::realloc(lines, sizeof(LSYS_line*)*linesSize, sizeof(LSYS_line*)*linesSize*2);
+			lines = (LSYS_Line**)allocator::realloc(lines, sizeof(LSYS_Line*)*linesSize, sizeof(LSYS_Line*)*linesSize*2);
 			linesSize *= 2;
 		}
 
@@ -290,13 +344,13 @@ namespace octet {
 
 		string axiom;
 
-		LSYS_production_rules():
+		LSYS_Production_Rules():
 		lines(NULL),
 		linesSize(0),
 		lineIndex(0),
 		currentIteration(0)
 		{
-			lines = (LSYS_line**)allocator::realloc(lines, sizeof(LSYS_line*)*linesSize, sizeof(LSYS_line*)*256);
+			lines = (LSYS_Line**)allocator::realloc(lines, sizeof(LSYS_Line*)*linesSize, sizeof(LSYS_Line*)*256);
 			linesSize = 256;
 		}
 
@@ -306,13 +360,14 @@ namespace octet {
 
 		void AddLine(mat4t modelToWorld, float size = 1.0f)
 		{
-			LSYS_line *line = new LSYS_line(modelToWorld, size);
+			LSYS_Line *line = new LSYS_Line(modelToWorld, size);
 
 			if(lineIndex >= linesSize) ExtendLines();
 
 			lines[lineIndex++] = line;
 		}
 
+		#pragma region DrawLine
 		void DrawLine
 		(
 			const mat4t &modelToWorld, 
@@ -345,6 +400,7 @@ namespace octet {
 
 			glDrawArrays(GL_LINES, 0, 2);
 		}
+		#pragma endregion
 		
 		void Process(string &rules, int &index, mat4t modelToWorld, mat4t &cameraToWorld, color_shader _shader)
 		{
@@ -394,7 +450,7 @@ namespace octet {
 
 		void ProcessTree(float &treeHeight, float &treeWidth)
 		{
-			tree = new LSYS_tree(*new mat4t(1.0f));
+			tree = new LSYS_Tree(*new mat4t(1.0f));
 			tree->Init(lineIndex, lines);
 			CleanUp();
 			lineIndex = 0;
@@ -550,34 +606,5 @@ namespace octet {
 		void DisplayLSystemDraw () {
 			printf("Current Ireration of tree \"%s\" is %d\n", ls->name, currentIteration);
 		}
-
-		/*void Iterate12 (string &axiom, int iterations) {
-
-			string newVariable;
-
-			//printf("%s\n", axiom.c_str());
-
-			for(int i = 0; i != iterations; ++i) {
-				for(int v = 0; v != axiom.size(); ++v) {
-					switch (axiom[v])
-					{
-						case 'F':
-							newVariable += "F[+F]F[-F]F"; // "F[+F]F[-F]F";
-							break;
-
-						default:
-							char c[2];
-							c[0] = axiom[v];
-							c[1] = '\0';
-							newVariable += (string)c;
-							break;
-					}
-				}
-				axiom = newVariable;
-				if(i != iterations-1)
-					newVariable = "";
-			}
-		}*/
-
 	};
 }

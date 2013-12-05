@@ -1,9 +1,0 @@
-Application Flow Chart:
-
-Loading the App:
- - Find all XML Files in assets/lsystem/configuration
- - Read all the files and take the information of each system.
-   - Name , Default Iterations , Angle , Rules , Characters
-
- - Create an LSystem class containing all of the XML types
-
